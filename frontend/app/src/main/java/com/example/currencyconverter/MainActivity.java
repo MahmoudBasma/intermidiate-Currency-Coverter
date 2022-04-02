@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
             HttpURLConnection http;
 
             try{
-                Log.i("Attempting", "Attempt1");
+                Log.i("Attempting", "Attempt2");
                 url = new URL(urls[0]);
                 http = (HttpURLConnection) url.openConnection();
 
@@ -32,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
                     char current = (char) data;
                     result += current;
                     data = reader.read();
-                    Log.i("Result", result);
-
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -43,6 +43,22 @@ public class MainActivity extends AppCompatActivity {
             return result;
         }
         protected void onPostExecute(String s){
+            super.onPostExecute(s);
+
+            try{
+                JSONObject json = new JSONObject(s);
+                int blackMarketHigh = json.getInt("Black Market rate-high");
+                int blackMarketLow = json.getInt("Black Market rate-low");
+                int bank = json.getInt("Bank rate");
+                int official = json.getInt("Official rate");
+                Log.i("blackMarketHigh", ""+blackMarketHigh);
+                Log.i("blackMarketLow", ""+blackMarketLow);
+                Log.i("bank ", ""+bank );
+                Log.i("official", ""+official);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
 
         }
     }
