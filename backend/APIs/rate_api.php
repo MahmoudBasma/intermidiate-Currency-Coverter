@@ -6,8 +6,7 @@ $results = array();
 
 if (!empty($html)) {
 
-    $div_class = $title = "";
-    $i = 0;
+    $div_class= "";
 
     foreach ($html->find(".container") as $div_class) {
 
@@ -30,8 +29,6 @@ if (!empty($html)) {
                 $results['Official rate'] = $value;
             }
         }
-        
-        $i++;
     }
 }
 $json_response = json_encode($results);
