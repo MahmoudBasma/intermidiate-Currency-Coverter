@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     Button btn;
     TextView result;
 
+
 /*
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }*/
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -156,10 +157,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.help:
-                goToHelp();
+                goToHelp(); //go to resource website for additional help and info
                 return true;
             case R.id.history:
-                showHistory();
+                showHistory(); // go to history which shows your converting history
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -172,34 +173,34 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Mahmoud re-add your ip address to work it out
-        String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
+        String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php"; //api that fetches the data
         // DownloadTask task = new DownloadTask();
         // task.execute(url);
 
         //same here king
-        String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
+        String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php"; //api that sends the data to the DB
         // UploadTask task1 = new UploadTask();
         // String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
         // task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
-        rates = findViewById(R.id.rate);
+        rates = findViewById(R.id.rate); // spinner to show the available converting rates
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rates.setAdapter(adapter);
         rates.setOnItemSelectedListener(this);
 
-        currencies = findViewById(R.id.currency);
+        currencies = findViewById(R.id.currency); // spinner to show which currency to convert to
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencies.setAdapter(adapter2);
         currencies.setOnItemSelectedListener(this);
 
-        actualRate = findViewById(R.id.actualRate);
+        actualRate = findViewById(R.id.actualRate); // shows the value of the converting rate
         result = (TextView) findViewById(R.id.result);
         btn = findViewById(R.id.convert);
 
-        btn.setOnClickListener(view -> {
+        btn.setOnClickListener(view -> { // lambda expression for converting and checking if something is missing
             if (currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
                 result.setText(null);
@@ -248,20 +249,20 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
 
-    private void goToHelp() {
+    private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
         String url = "https://www.thelebaneseguide.com/lira-rate";
         intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);
     }
 
-    private void showHistory() {
+    private void showHistory() { // redirects us to our history of converting
         intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { //selects which rate we going to chose or convert with
         //if(rates.getSelectedItem().toString().equals(""))
         //Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         if (rates.getSelectedItem().toString().equals("Black Market High Rate"))
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onNothingSelected(AdapterView<?> adapterView) { //koosa mitil ilta
     }
 
 
@@ -286,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) {
+        if (amount.getText().toString().equals("")) { //check if amount inserted to convert else error
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private void usdToLBP(View view) {
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) {
+        if (amount.getText().toString().equals("")) { //same idea as above
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());

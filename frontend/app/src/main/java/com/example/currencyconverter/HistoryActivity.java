@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 public class HistoryActivity extends AppCompatActivity {
 Intent intent;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -23,10 +24,10 @@ Intent intent;
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.help:
-                goToHelp();
+                goToHelp(); //redirects us back to the main website
                 return true;
             case R.id.home:
-                backHome();
+                backHome(); //returns us to the main page
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -39,14 +40,14 @@ Intent intent;
         setContentView(R.layout.activity_history);
     }
     private void goToHelp() {
-        String url = "https://www.thelebaneseguide.com/lira-rate";
+        String url = "https://www.thelebaneseguide.com/lira-rate"; //same as before
         intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);
     }
 
     private void backHome() {
-        intent = new Intent(this, MainActivity.class);
+        intent = new Intent(this, MainActivity.class); //same as before
         startActivity(intent);
     }
 }
