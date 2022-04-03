@@ -2,9 +2,13 @@ package com.example.currencyconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.json.JSONObject;
 
@@ -19,6 +23,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
+
+    //creating global variables to use
+    
+
 
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
@@ -116,6 +124,29 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.help:
+                goToHelp();
+                return true;
+            case R.id.history:
+                showHistory();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,5 +165,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+    private void goToHelp() {
+        Intent intent = new Intent(this,HelpActivity.class);
+        startActivity(intent);
+    }
+
+    private void showHistory() {
+        Intent intent = new Intent(this,HistoryActivity.class);
+        startActivity(intent);
     }
 }
