@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     Spinner currencies;
     Spinner rates;
     TextView actualRate;
+    TextView amount;
+    int money;
+    Button btn;
 
 /*
     class DownloadTask extends AsyncTask<String, Void, String>{
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Mahmoud readd your ip address to work it out
+        //Mahmoud re-add your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
         //DownloadTask task = new DownloadTask();
       //  task.execute(url);
@@ -190,11 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         actualRate = findViewById(R.id.actualRate);
 
-
-
-
-
-        Button btn  = findViewById(R.id.convert);
+        btn  = findViewById(R.id.convert);
 
         btn.setOnClickListener(new View.OnClickListener(){
 
@@ -277,34 +276,21 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
-    private int getRate(){
-        if(rates.getSelectedItem().toString().equals("")){
-            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
-            return 0;
-        }
-        if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
-            return blackMarketHigh;
-        if(rates.getSelectedItem().toString().equals("Black Market Low Rate"))
-            return blackMarketLow;
-        if(rates.getSelectedItem().toString().equals("Bank Rate"))
-            return bank;
 
-        return official;
-    }
 
     private void lbpToUSD(View view){
 
 
-        TextView amount = (TextView) findViewById(R.id.amount);
+        amount = (TextView) findViewById(R.id.amount);
 
-        int money =  Integer.parseInt(amount.getText().toString()) / getRate();
+        money =  Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText( money + " USD");
     }
     private void usdToLBP(View view) {
 
-        TextView amount = (TextView) findViewById(R.id.amount);
-        int money =  Integer.parseInt(amount.getText().toString()) * getRate();
+        amount = (TextView) findViewById(R.id.amount);
+        money =  Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText(money + " LBP");
     }
