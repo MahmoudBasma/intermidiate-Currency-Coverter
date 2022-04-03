@@ -159,9 +159,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             case R.id.help:
                 goToHelp(); //go to resource website for additional help and info
                 return true;
-            case R.id.history:
-                showHistory(); // go to history which shows your converting history
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -256,10 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         startActivity(intent);
     }
 
-    private void showHistory() { // redirects us to our history of converting
-        intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
-    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { //selects which rate we going to chose or convert with

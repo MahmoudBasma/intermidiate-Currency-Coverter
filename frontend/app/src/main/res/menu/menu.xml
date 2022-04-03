@@ -8,8 +8,4 @@
         android:title="@string/help"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/history"
-        android:title="@string/History" />
-
 </menu>
