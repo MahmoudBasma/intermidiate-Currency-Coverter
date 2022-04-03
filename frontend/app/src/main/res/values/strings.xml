@@ -17,8 +17,7 @@
     <string name="app_name">CurrencyConverter</string>
     <string name="refresh">refresh</string> <!-- didn't use it-->
     <string name="help">help</string>
-    <string name="History">History</string>
     <string name="koosa">Error Don\'t Leave Empty</string>
-    <string name="Home">Home</string>
+
 
 </resources>
