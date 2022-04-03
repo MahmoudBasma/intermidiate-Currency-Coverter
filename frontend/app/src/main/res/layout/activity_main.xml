@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/actualRate"
-        android:layout_width="187dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:inputType="textPersonName"

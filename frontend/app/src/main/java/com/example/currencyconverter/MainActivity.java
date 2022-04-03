@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -35,14 +36,15 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     //creating global variables to use
-    int bank , blackMarketHigh, blackMarketLow, official, money;
+    int bank = 2 , blackMarketHigh =1, blackMarketLow= 2, official =1, money;
     Spinner currencies;
     Spinner rates;
     TextView actualRate;
     TextView amount;
     Button btn;
+    TextView result ;
 
-
+/*
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             }
             return null;
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -168,14 +170,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         setContentView(R.layout.activity_main);
         //Mahmoud re-add your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
-        DownloadTask task = new DownloadTask();
-        task.execute(url);
+       // DownloadTask task = new DownloadTask();
+       // task.execute(url);
 
         //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
-        UploadTask task1 = new UploadTask();
-        String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-        task1.execute(postUrl, jsonInputString);
+       // UploadTask task1 = new UploadTask();
+       // String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
+       // task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate);
@@ -191,21 +193,19 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         currencies.setOnItemSelectedListener(this);
 
         actualRate = findViewById(R.id.actualRate);
-
+        result  = (TextView) findViewById(R.id.result);
         btn  = findViewById(R.id.convert);
 
-        btn.setOnClickListener(new View.OnClickListener(){
+        btn.setOnClickListener(view -> {
+            if(currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")){
+                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+                result.setText(null);
 
-            @Override
-            public void onClick(View view) {
-                if(currencies.getSelectedItem().toString().equals("")){
-                    Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
-                }
-                else if(currencies.getSelectedItem().toString().equals("LBP")){
-                    usdToLBP(view);
-                } else{
-                    lbpToUSD(view);
-                }
+            }
+            else if(currencies.getSelectedItem().toString().equals("LBP")){
+                usdToLBP(view);
+            } else{
+                lbpToUSD(view);
             }
         });
 
@@ -258,8 +258,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-      //  if(rates.getSelectedItem().toString().equals(""))
-            //Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+      if(rates.getSelectedItem().toString().equals(""))
+          Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
         if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
             actualRate.setText(blackMarketHigh+"");
 
@@ -282,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
-
         money =  Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText( money + " USD");
