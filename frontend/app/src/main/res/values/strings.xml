@@ -1,9 +1,11 @@
 <resources>
+
     <string-array name="currency">
-    <item></item>
-    <item>LBP</item>
-    <item>USD</item>
+        <item></item>
+        <item>LBP</item>
+        <item>USD</item>
     </string-array>
+
     <string-array name="rates">
         <item></item>
         <item>Black Market High Rate</item>
@@ -11,9 +13,12 @@
         <item>Bank Rate</item>
         <item>Official Rate</item>
     </string-array>
+
     <string name="app_name">CurrencyConverter</string>
-    <string name="refresh">refresh</string>
+    <string name="refresh">refresh</string> <!-- didn't use it-->
     <string name="help">help</string>
     <string name="History">History</string>
     <string name="koosa">Error Don\'t Leave Empty</string>
+    <string name="Home">Home</string>
+
 </resources>

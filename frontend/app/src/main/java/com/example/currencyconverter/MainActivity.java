@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //creating global variables to use
     Intent intent;
-    int bank = 2 , blackMarketHigh =1, blackMarketLow= 2, official =1, money;
+    int bank = 2, blackMarketHigh = 1, blackMarketLow = 2, official = 1, money;
     Spinner currencies;
     Spinner rates;
     TextView actualRate;
     TextView amount;
     Button btn;
-    TextView result ;
+    TextView result;
 
 /*
     class DownloadTask extends AsyncTask<String, Void, String>{
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -167,46 +168,45 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Mahmoud re-add your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
-       // DownloadTask task = new DownloadTask();
-       // task.execute(url);
+        // DownloadTask task = new DownloadTask();
+        // task.execute(url);
 
         //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
-       // UploadTask task1 = new UploadTask();
-       // String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-       // task1.execute(postUrl, jsonInputString);
+        // UploadTask task1 = new UploadTask();
+        // String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
+        // task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rates.setAdapter(adapter);
         rates.setOnItemSelectedListener(this);
 
         currencies = findViewById(R.id.currency);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencies.setAdapter(adapter2);
         currencies.setOnItemSelectedListener(this);
 
         actualRate = findViewById(R.id.actualRate);
-        result  = (TextView) findViewById(R.id.result);
-        btn  = findViewById(R.id.convert);
+        result = (TextView) findViewById(R.id.result);
+        btn = findViewById(R.id.convert);
 
         btn.setOnClickListener(view -> {
-            if(currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")){
+            if (currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
                 result.setText(null);
 
-            }
-            else if(currencies.getSelectedItem().toString().equals("LBP")){
+            } else if (currencies.getSelectedItem().toString().equals("LBP")) {
                 usdToLBP(view);
-            } else{
+            } else {
                 lbpToUSD(view);
             }
         });
@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 }*/
 
 
-
     }
 
 
@@ -257,23 +256,24 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     private void showHistory() {
-        intent = new Intent(this,HistoryActivity.class);
+        intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-      if(rates.getSelectedItem().toString().equals(""))
-          Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-        if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
-            actualRate.setText(blackMarketHigh+"");
+        //if(rates.getSelectedItem().toString().equals(""))
+        //Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
+        if (rates.getSelectedItem().toString().equals("Black Market High Rate"))
+            actualRate.setText(blackMarketHigh + "");
 
-        if(rates.getSelectedItem().toString().equals("Black Market Low Rate"))
-            actualRate.setText(blackMarketLow +"");
+        if (rates.getSelectedItem().toString().equals("Black Market Low Rate"))
+            actualRate.setText(blackMarketLow + "");
 
-        if(rates.getSelectedItem().toString().equals("Bank Rate"))
-            actualRate.setText(bank+"");
-        if(rates.getSelectedItem().toString().equals("Official Rate"))
-            actualRate.setText(official+"");
+        if (rates.getSelectedItem().toString().equals("Bank Rate"))
+            actualRate.setText(bank + "");
+        if (rates.getSelectedItem().toString().equals("Official Rate"))
+            actualRate.setText(official + "");
 
     }
 
@@ -282,21 +282,33 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
 
-    private void lbpToUSD(View view){
+    private void lbpToUSD(View view) {
 
 
         amount = (TextView) findViewById(R.id.amount);
+        if (amount.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
+        } else {
+            money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
+            TextView result = (TextView) findViewById(R.id.result);
+            result.setText(money + " USD");
+        }
 
-        money =  Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
-        TextView result  = (TextView) findViewById(R.id.result);
-        result.setText( money + " USD");
+        money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
+        TextView result = (TextView) findViewById(R.id.result);
+        result.setText(money + " USD");
     }
+
     private void usdToLBP(View view) {
 
         amount = (TextView) findViewById(R.id.amount);
-        money =  Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());
-        TextView result  = (TextView) findViewById(R.id.result);
-        result.setText(money + " LBP");
+        if (amount.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
+        } else {
+            money = Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());
+            TextView result = (TextView) findViewById(R.id.result);
+            result.setText(money + " LBP");
+        }
     }
 
 
