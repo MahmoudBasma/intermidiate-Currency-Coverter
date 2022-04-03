@@ -121,15 +121,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String url = "http://192.168.53.37/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
+        String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
         DownloadTask task = new DownloadTask();
         task.execute(url);
 
-        String postUrl = "http://192.168.53.37/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
+        String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
         UploadTask task1 = new UploadTask();
         String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
         task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
+
+
 
 
     }

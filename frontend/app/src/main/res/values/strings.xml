@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
+    <String name="refresh"> Refresh</String>
 </resources>
