@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         setContentView(R.layout.activity_main);
         //Mahmoud re-add your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php"; //api that fetches the data
-        // DownloadTask task = new DownloadTask();
-        // task.execute(url);
+        DownloadTask task = new DownloadTask();
+        task.execute(url);
 
         //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php"; //api that sends the data to the DB
