@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) {
+        if (amount.getText().toString().equals("")) { //checking whether the amount inserted by the user is actually null or not to check whether to get a result or no
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private void usdToLBP(View view) {
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) {
+        if (amount.getText().toString().equals("")) {// same as before^^^
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());

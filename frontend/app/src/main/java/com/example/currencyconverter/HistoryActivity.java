@@ -13,7 +13,7 @@ public class HistoryActivity extends AppCompatActivity {
     Intent intent;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
+    public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used here
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_history, menu);
         return true;
