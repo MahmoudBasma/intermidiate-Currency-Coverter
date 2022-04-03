@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //creating global variables to use
     int bank = 8000, blackMarketHigh= 25000, blackMarketLow= 24000, official = 1500;
-
+    Spinner currencies;
+    Spinner rates;
+    TextView actualRate;
 
 /*
     class DownloadTask extends AsyncTask<String, Void, String>{
@@ -174,18 +176,23 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         //task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
-        Spinner rates = findViewById(R.id.rate);
+        rates = findViewById(R.id.rate);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rates.setAdapter(adapter);
         rates.setOnItemSelectedListener(this);
 
-        Spinner currencies = findViewById(R.id.currency);
+        currencies = findViewById(R.id.currency);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency,android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencies.setAdapter(adapter2);
         currencies.setOnItemSelectedListener(this);
-        
+
+        actualRate = findViewById(R.id.actualRate);
+
+
+
+
 
         Button btn  = findViewById(R.id.convert);
 
@@ -197,9 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                     Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
                 }
                 else if(currencies.getSelectedItem().toString().equals("LBP")){
-                    usdToLBP(view,rates);
+                    usdToLBP(view);
                 } else{
-                    lbpToUSD(view, rates);
+                    lbpToUSD(view);
                 }
             }
         });
@@ -254,26 +261,50 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+        if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
+            actualRate.setText(blackMarketHigh+"");
+
+        if(rates.getSelectedItem().toString().equals("Black Market Low Rate"))
+            actualRate.setText(blackMarketLow +"");
+
+        if(rates.getSelectedItem().toString().equals("Bank Rate"))
+            actualRate.setText(bank+"");
+        if(rates.getSelectedItem().toString().equals("Official Rate"))
+            actualRate.setText(official+"");
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
+    private int getRate(){
+        if(rates.getSelectedItem().toString().equals("")){
+            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+            return 0;
+        }
+        if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
+            return blackMarketHigh;
+        if(rates.getSelectedItem().toString().equals("Black Market Low Rate"))
+            return blackMarketLow;
+        if(rates.getSelectedItem().toString().equals("Bank Rate"))
+            return bank;
 
-    private void lbpToUSD(View view, Spinner spin){
+        return official;
+    }
+
+    private void lbpToUSD(View view){
+
 
         TextView amount = (TextView) findViewById(R.id.amount);
-        String sRate =  spin.getSelectedItem().toString();
-        int rate = Integer.parseInt(sRate);
-        int money =  Integer.parseInt(amount.getText().toString()) / rate;
+
+        int money =  Integer.parseInt(amount.getText().toString()) / getRate();
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText( money + " USD");
     }
-    private void usdToLBP(View view,Spinner spin) {
+    private void usdToLBP(View view) {
+
         TextView amount = (TextView) findViewById(R.id.amount);
-        String sRate =  spin.getSelectedItem().toString();
-        int rate = Integer.parseInt(sRate);
-        int money =  Integer.parseInt(amount.getText().toString()) * rate;
+        int money =  Integer.parseInt(amount.getText().toString()) * getRate();
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText(money + " LBP");
     }
