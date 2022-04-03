@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         });
 
 
-//koosa don't look here: اختراعات قواص الطائر
+                    //koosa don't look here: اختراعات قواص الطائر
        /* switch (currencies.getSelectedItem().toString()) {
             case "USD":
                 switch (rates.getSelectedItem().toString()){
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                     case "Official Rate":
                         lbpToUSD(rates, official);
                 }
-
+                    :) was trying to implement the word by using switch case cause it is similar to When statements in Kotlin...
             case "LBP":
                 switch (rates.getSelectedItem().toString()){
                     case "Black Market High Rate":
