@@ -3,6 +3,7 @@ package com.example.currencyconverter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -248,8 +249,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
     private void goToHelp() {
-        Intent intent = new Intent(this,HelpActivity.class);
-        startActivity(intent);
+        String url = "https://www.thelebaneseguide.com/lira-rate";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     private void showHistory() {
@@ -282,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
+        
         money =  Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText( money + " USD");
