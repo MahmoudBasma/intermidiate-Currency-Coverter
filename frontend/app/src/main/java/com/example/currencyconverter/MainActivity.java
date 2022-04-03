@@ -13,8 +13,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -31,9 +35,10 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     //creating global variables to use
+    int bank = 8000, blackMarketHigh= 25000, blackMarketLow= 24000, official = 1500;
 
 
-
+/*
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -66,10 +71,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
             try{
                 JSONObject json = new JSONObject(s);
-                int blackMarketHigh = json.getInt("Black Market rate-high");
-                int blackMarketLow = json.getInt("Black Market rate-low");
-                int bank = json.getInt("Bank rate");
-                int official = json.getInt("Official rate");
+                blackMarketHigh = json.getInt("Black Market rate-high");
+                blackMarketLow = json.getInt("Black Market rate-low");
+                bank = json.getInt("Bank rate");
+                official = json.getInt("Official rate");
                 Log.i("blackMarketHigh", ""+blackMarketHigh);
                 Log.i("blackMarketLow", ""+blackMarketLow);
                 Log.i("bank ", ""+bank );
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             return null;
         }
     }
-
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -157,15 +162,16 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Mahmoud readd your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
-        DownloadTask task = new DownloadTask();
-        task.execute(url);
+        //DownloadTask task = new DownloadTask();
+      //  task.execute(url);
 
+        //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
-        UploadTask task1 = new UploadTask();
+       // UploadTask task1 = new UploadTask();
         String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-        task1.execute(postUrl, jsonInputString);
+        //task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
         Spinner rates = findViewById(R.id.rate);
@@ -179,9 +185,63 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencies.setAdapter(adapter2);
         currencies.setOnItemSelectedListener(this);
+        
+
+        Button btn  = findViewById(R.id.convert);
+
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                if(currencies.getSelectedItem().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+                }
+                else if(currencies.getSelectedItem().toString().equals("LBP")){
+                    usdToLBP(view,rates);
+                } else{
+                    lbpToUSD(view, rates);
+                }
+            }
+        });
+
+
+
+       /* switch (currencies.getSelectedItem().toString()) {
+            case "USD":
+                switch (rates.getSelectedItem().toString()){
+                    case "Black Market High Rate":
+                        lbpToUSD(rates, blackMarketHigh);
+
+                    case "Black Market Low Rate":
+                        lbpToUSD(rates, blackMarketLow);
+
+                    case "Bank Rate":
+                        lbpToUSD(rates, bank);
+
+                    case "Official Rate":
+                        lbpToUSD(rates, official);
+                }
+
+            case "LBP":
+                switch (rates.getSelectedItem().toString()){
+                    case "Black Market High Rate":
+                        usdToLBP(rates, blackMarketHigh);
+
+                    case "Black Market Low Rate":
+                        usdToLBP(rates, blackMarketLow);
+
+                    case "Bank Rate":
+                        usdToLBP(rates, bank);
+
+                    case "Official Rate":
+                        usdToLBP(rates, official);
+                }*/
+
 
 
     }
+
+
     private void goToHelp() {
         Intent intent = new Intent(this,HelpActivity.class);
         startActivity(intent);
@@ -198,7 +258,25 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-            adapterView.getEmptyView();
     }
+
+    private void lbpToUSD(View view, Spinner spin){
+
+        TextView amount = (TextView) findViewById(R.id.amount);
+        String sRate =  spin.getSelectedItem().toString();
+        int rate = Integer.parseInt(sRate);
+        int money =  Integer.parseInt(amount.getText().toString()) / rate;
+        TextView result  = (TextView) findViewById(R.id.result);
+        result.setText( money + " USD");
+    }
+    private void usdToLBP(View view,Spinner spin) {
+        TextView amount = (TextView) findViewById(R.id.amount);
+        String sRate =  spin.getSelectedItem().toString();
+        int rate = Integer.parseInt(sRate);
+        int money =  Integer.parseInt(amount.getText().toString()) * rate;
+        TextView result  = (TextView) findViewById(R.id.result);
+        result.setText(money + " LBP");
+    }
+
 
 }
