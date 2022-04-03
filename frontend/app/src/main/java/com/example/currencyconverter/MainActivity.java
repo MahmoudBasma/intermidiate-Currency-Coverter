@@ -37,6 +37,7 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     //creating global variables to use
+    Intent intent;
     int bank = 2 , blackMarketHigh =1, blackMarketLow= 2, official =1, money;
     Spinner currencies;
     Spinner rates;
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         btn.setOnClickListener(view -> {
             if(currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")){
-                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
                 result.setText(null);
 
             }
@@ -250,19 +251,19 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     private void goToHelp() {
         String url = "https://www.thelebaneseguide.com/lira-rate";
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
+        intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private void showHistory() {
-        Intent intent = new Intent(this,HistoryActivity.class);
+        intent = new Intent(this,HistoryActivity.class);
         startActivity(intent);
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
       if(rates.getSelectedItem().toString().equals(""))
-          Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
+          Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
             actualRate.setText(blackMarketHigh+"");
 
@@ -285,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
-        
+
         money =  Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result  = (TextView) findViewById(R.id.result);
         result.setText( money + " USD");
