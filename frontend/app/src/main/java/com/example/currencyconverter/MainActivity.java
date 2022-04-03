@@ -9,6 +9,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import org.json.JSONObject;
 
@@ -22,10 +28,10 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     //creating global variables to use
-    
+
 
 
     class DownloadTask extends AsyncTask<String, Void, String>{
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -162,7 +168,17 @@ public class MainActivity extends AppCompatActivity {
         task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
+        Spinner rates = findViewById(R.id.rate);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rates.setAdapter(adapter);
+        rates.setOnItemSelectedListener(this);
 
+        Spinner currencies = findViewById(R.id.currency);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency,android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currencies.setAdapter(adapter2);
+        currencies.setOnItemSelectedListener(this);
 
 
     }
@@ -175,4 +191,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,HistoryActivity.class);
         startActivity(intent);
     }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+            adapterView.getEmptyView();
+    }
+
 }
