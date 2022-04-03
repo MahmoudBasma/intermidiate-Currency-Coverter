@@ -35,15 +35,14 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     //creating global variables to use
-    int bank = 8000, blackMarketHigh= 25000, blackMarketLow= 24000, official = 1500;
+    int bank , blackMarketHigh, blackMarketLow, official, money;
     Spinner currencies;
     Spinner rates;
     TextView actualRate;
     TextView amount;
-    int money;
     Button btn;
 
-/*
+
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             return null;
         }
     }
-*/
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -169,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         setContentView(R.layout.activity_main);
         //Mahmoud re-add your ip address to work it out
         String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
-        //DownloadTask task = new DownloadTask();
-      //  task.execute(url);
+        DownloadTask task = new DownloadTask();
+        task.execute(url);
 
         //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
-       // UploadTask task1 = new UploadTask();
+        UploadTask task1 = new UploadTask();
         String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-        //task1.execute(postUrl, jsonInputString);
+        task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate);
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         });
 
 
-
+//koosa don't look here: اختراعات قواص الطائر
        /* switch (currencies.getSelectedItem().toString()) {
             case "USD":
                 switch (rates.getSelectedItem().toString()){
@@ -259,7 +258,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+      //  if(rates.getSelectedItem().toString().equals(""))
+            //Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_LONG).show();
         if(rates.getSelectedItem().toString().equals("Black Market High Rate"))
             actualRate.setText(blackMarketHigh+"");
 
