@@ -179,9 +179,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         //same here king
         String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php"; //api that sends the data to the DB
-        // UploadTask task1 = new UploadTask();
-        // String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-        // task1.execute(postUrl, jsonInputString);
+        UploadTask task1 = new UploadTask();
+        String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
+        task1.execute(postUrl, jsonInputString);
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate); // spinner to show the available converting rates
