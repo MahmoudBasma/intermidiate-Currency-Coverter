@@ -15,7 +15,7 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.menu_history, menu);
         return true;
     }
 
@@ -26,7 +26,7 @@ public class HistoryActivity extends AppCompatActivity {
             case R.id.help:
                 goToHelp(); //go to resource website for additional help and info
                 return true;
-            case R.id.history:
+            case R.id.home:
                 backHome(); // go to home page to convert
                 return true;
             default:
