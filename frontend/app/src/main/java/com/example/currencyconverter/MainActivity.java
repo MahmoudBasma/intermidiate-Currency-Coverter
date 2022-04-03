@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //creating global variables to use
     Intent intent;
-    int bank = 2, blackMarketHigh = 1, blackMarketLow = 2, official = 1, money;
+    int bank , blackMarketHigh , blackMarketLow , official , money;
     Spinner currencies;
     Spinner rates;
     TextView actualRate;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     TextView result;
 
 
-/*
+ //mahmoud thingies:--->
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             }
             return null;
         }
-    }*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
