@@ -159,6 +159,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             case R.id.help:
                 goToHelp(); //go to resource website for additional help and info
                 return true;
+            case R.id.history:
+                showHistory(); // go to history which shows your converting history
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -253,6 +256,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         startActivity(intent);
     }
 
+    private void showHistory() { // redirects us to our history of converting
+        intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -273,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) { //koosa mitil ilta
+    public void onNothingSelected(AdapterView<?> adapterView) { //koosa mitil illita
     }
 
 
@@ -281,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) { //check if amount inserted to convert else error
+        if (amount.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
@@ -297,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     private void usdToLBP(View view) {
 
         amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) { //same idea as above
+        if (amount.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
         } else {
             money = Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());
