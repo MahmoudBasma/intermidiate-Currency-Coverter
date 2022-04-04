@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
     }
 
-    public class UploadTask extends AsyncTask<String, String, String> {
+    public class UploadTask extends AsyncTask<String, Void, Boolean> {
 
         URL url;
         HttpURLConnection http;
@@ -117,32 +118,57 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
 
         @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0]; // URL to call
-            String data = params[1]; //data to post
-            Log.i("Data",data);
-            OutputStream out = null;
-
+        protected Boolean doInBackground(String... strings) {
 
             try {
+                URL url = new URL(strings[0]);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
 
-                URL url = new URL(urlString);
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                out = new BufferedOutputStream(con.getOutputStream());
+                byte[] out = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                int length = out.length;
 
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-                writer.write(data);
-                writer.flush();
-                writer.close();
-                out.close();
-                con.connect();
-                Log.i("status", "real success");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+                urlConnection.setFixedLengthStreamingMode(length);
+                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                urlConnection.connect();
+                try(OutputStream os = urlConnection.getOutputStream()) {
+                    os.write(out);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            return null;
+
+            return true;
         }
+//        protected String doInBackground(String... params) {
+//            String urlString = params[0]; // URL to call
+//            String data = params[1]; //data to post
+//            Log.i("Data",data);
+//            OutputStream out = null;
+//
+//
+//            try {
+//
+//                URL url = new URL(urlString);
+//                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//                con.setRequestMethod("POST");
+//                out = new BufferedOutputStream(con.getOutputStream());
+//
+//                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+//                writer.write(data);
+//                writer.flush();
+//                writer.close();
+//                out.close();
+//                con.connect();
+//                Log.i("status", "real success");
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//            return null;
+//        }
     }
 
     @Override
@@ -172,16 +198,29 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Mahmoud re-add your ip address to work it out
-        String url = "http://185.97.92.122/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php"; //api that fetches the data
+
+        //api that fetches the data
+
+        String url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
         DownloadTask task = new DownloadTask();
         task.execute(url);
 
-        //same here king
-        String postUrl = "http://192.168.0.119/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php"; //api that sends the data to the DB
+        //api that sends the data to the DB
+        String postUrl = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
         UploadTask task1 = new UploadTask();
-        String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-        task1.execute(postUrl, jsonInputString);
+
+        boolean requestResult = true;
+        try {
+         requestResult = task1.execute(postUrl).get();
+            if(!requestResult){
+                Log.i("Attempt:", "Failed");
+                System.out.println("Something went wrong!");
+            }
+            Log.i("Attempt:", "Post Request sent");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate); // spinner to show the available converting rates
