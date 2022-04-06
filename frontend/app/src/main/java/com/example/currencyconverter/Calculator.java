@@ -34,6 +34,52 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
     TextView amount;
     Button btn;
     TextView result;
+    String url, url1;
+    DownloadTask task;
+    UploadTask task1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calculator);
+
+        url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
+        task = new DownloadTask();
+        task.execute(url);
+
+        url1 = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
+        task1 = new UploadTask();
+
+        rates = findViewById(R.id.rate); // spinner to show the available converting rates
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rates.setAdapter(adapter);
+        rates.setOnItemSelectedListener(this);
+
+        currencies = findViewById(R.id.currency); // spinner to show which currency to convert to
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currencies.setAdapter(adapter2);
+        currencies.setOnItemSelectedListener(this);
+
+        actualRate = findViewById(R.id.actualRate); // shows the value of the converting rate
+        result = (TextView) findViewById(R.id.result);
+        btn = findViewById(R.id.convert);
+
+        btn.setOnClickListener(view -> { // lambda expression for converting and checking if something is missing
+            if (currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")) {
+                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
+                result.setText(null);
+
+            } else if (currencies.getSelectedItem().toString().equals("LBP")) {
+                usdToLBP(view);
+
+            } else {
+                lbpToUSD(view);
+            }
+        });
+
+    }
 
     private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
         String url = "https://www.thelebaneseguide.com/lira-rate";
@@ -224,6 +270,8 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
         money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result = (TextView) findViewById(R.id.result);
         result.setText(money + " USD");
+        task1.execute(url1 + "?amount="+amount+"&rate=market&currency=LBP");
+
     }
 
     private void usdToLBP(View view) {
@@ -236,40 +284,9 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
             TextView result = (TextView) findViewById(R.id.result);
             result.setText(money + " LBP");
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calculator);
-
-        rates = findViewById(R.id.rate); // spinner to show the available converting rates
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        rates.setAdapter(adapter);
-        rates.setOnItemSelectedListener(this);
-
-        currencies = findViewById(R.id.currency); // spinner to show which currency to convert to
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency, android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        currencies.setAdapter(adapter2);
-        currencies.setOnItemSelectedListener(this);
-
-        actualRate = findViewById(R.id.actualRate); // shows the value of the converting rate
-        result = (TextView) findViewById(R.id.result);
-        btn = findViewById(R.id.convert);
-
-        btn.setOnClickListener(view -> { // lambda expression for converting and checking if something is missing
-            if (currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-                result.setText(null);
-
-            } else if (currencies.getSelectedItem().toString().equals("LBP")) {
-                usdToLBP(view);
-            } else {
-                lbpToUSD(view);
-            }
-        });
+        task1.execute(url1 + "?amount="+amount+"&rate=market&currency=USD");
 
     }
+
+
 }

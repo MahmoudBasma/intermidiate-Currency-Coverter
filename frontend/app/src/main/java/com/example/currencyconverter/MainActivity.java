@@ -52,6 +52,23 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
  //The DownloadTask object will allow us to retrieve the scraped values from the rates API
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        actualRate = (TextView) findViewById(R.id.blackMarket);
+        bankRate = (TextView) findViewById(R.id.bankRate);
+        officialRate = (TextView) findViewById(R.id.officialRate);
+
+        //api that fetches the data
+
+        String url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
+        DownloadTask task = new DownloadTask();
+        task.execute(url);
+
+        }
+
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -121,25 +138,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        actualRate = findViewById(R.id.actualRate);
-        bankRate = findViewById(R.id.bankRate);
-        officialRate = findViewById(R.id.officialRate);
-
-        //api that fetches the data
-
-        String url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
-        DownloadTask task = new DownloadTask();
-        task.execute(url);
-
-        }
-
 
     private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
         String url = "https://www.thelebaneseguide.com/lira-rate";
