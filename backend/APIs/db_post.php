@@ -1,16 +1,17 @@
 <?php
 
-include("db_info.php");
-$json = file_get_contents('php://input');
-echo $json;
-$data = json_decode($json);
-echo $data;
+include("db_info.php")
 
+//retrieving to url attributes
 
-$amount = $data->"amount";
-$rate = $data->"rate";
-$currency = $data->"currency";
+//The actual ammount that we wanted to conver
+$amount = floatval($_GET["amount"]);
+//The rate that was used to convert i.e black market rate, bank rate or official
+$rate = $_GET["rate"];
+//The currency of the money before converting
+$currency = $_GET["currency"];
 
+//Adding to the database table in a secure way
 $query = $mysqli->prepare("INSERT INTO conversions (amount, rate, currency) VALUES (?, ?, ?)");
 $query->bind_param("iss", $amount, $rate, $currency);
 $query->execute();
