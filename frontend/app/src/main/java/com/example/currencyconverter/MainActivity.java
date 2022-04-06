@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 Log.i("blackMarketLow", ""+blackMarketLow);
                 Log.i("bank ", ""+bank );
                 Log.i("official", ""+official);
+                actualRate.setText(blackMarketLow);
+                bankRate.setText(bank);
+                officialRate.setText(official);
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -125,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        actualRate = findViewById(R.id.actualRate);
+        bankRate = findViewById(R.id.bankRate);
+        officialRate = findViewById(R.id.officialRate);
+
         //api that fetches the data
 
         String url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
@@ -152,55 +159,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { //selects which rate we going to chose or convert with
-        //if(rates.getSelectedItem().toString().equals(""))
-        //Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-        if (rates.getSelectedItem().toString().equals("Black Market High Rate"))
-            actualRate.setText(blackMarketHigh + "");
-
-        if (rates.getSelectedItem().toString().equals("Black Market Low Rate"))
-            actualRate.setText(blackMarketLow + "");
-
-        if (rates.getSelectedItem().toString().equals("Bank Rate"))
-            actualRate.setText(bank + "");
-        if (rates.getSelectedItem().toString().equals("Official Rate"))
-            actualRate.setText(official + "");
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) { //koosa mitil illita
+    public void onNothingSelected(AdapterView<?> adapterView) {
     }
 
-
-    private void lbpToUSD(View view) {
-
-
-        amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) { //checking whether the amount inserted by the user is actually null or not to check whether to get a result or no
-            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-        } else {
-            money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
-            TextView result = (TextView) findViewById(R.id.result);
-            result.setText(money + " USD");
-        }
-
-        money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
-        TextView result = (TextView) findViewById(R.id.result);
-        result.setText(money + " USD");
-    }
-
-    private void usdToLBP(View view) {
-
-        amount = (TextView) findViewById(R.id.amount);
-        if (amount.getText().toString().equals("")) {// same as before^^^
-            Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-        } else {
-            money = Integer.parseInt(amount.getText().toString()) * Integer.parseInt(actualRate.getText().toString());
-            TextView result = (TextView) findViewById(R.id.result);
-            result.setText(money + " LBP");
-        }
-    }
 
 
 }
