@@ -53,15 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
  //This is the get request Object
  //The DownloadTask object will allow us to retrieve the scraped values from the rates API
 
-    public void goToCalculator(View view){
-        Intent obj = new Intent(getApplicationContext(), Calculator.class);
-        obj.putExtra("bank", bank);
-        obj.putExtra("blackMarketHigh",blackMarketHigh);
-        obj.putExtra("blackMarketLow",blackMarketLow);
-        obj.putExtra("official",official);
-        startActivity(obj);
 
-    }
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -107,74 +99,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
     }
 
-    public class UploadTask extends AsyncTask<String, Void, String> {
-
-        URL url;
-        HttpURLConnection http;
-
-        public UploadTask(){
-            //set context variables if required
-        }
-
-        protected void onPostExecute(String s){
-            super.onPostExecute(s);
-            try{
-                JSONObject json = new JSONObject(s);
-                String status = json.getString("status");
-                Log.i("Connection status:", ""+status);
-
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            StringBuilder status = new StringBuilder();
-
-            try {
-                url = new URL(strings[0]);
-                http = (HttpURLConnection) url.openConnection();
-                InputStream in = http.getInputStream();
-                InputStreamReader reader = new InputStreamReader(in);
-                int data = reader.read();
-                while( data != -1){
-                    char current = (char) data;
-                    status.append(current);
-                    data = reader.read();
-                }
-
-                /* ORIGINALLY, we wanted to do a post request from the APP. We tried sending
-                the post attributes one by one and as a JSON file however the api never worked
-                It worked on postman, but not here. So, I decided to use a get request with attributes.
-                It is not the best way, yet it is guaranteed to work
-
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setDoOutput(true);
-                String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
-
-                byte[] out = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                int length = out.length;
-
-                urlConnection.setFixedLengthStreamingMode(length);
-                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                urlConnection.connect();
-                try(OutputStream os = urlConnection.getOutputStream()) {
-                    os.write(out);
-                }
-                 */
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return status.toString();
-        }
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
         MenuInflater inflater = getMenuInflater();
@@ -209,87 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         DownloadTask task = new DownloadTask();
         task.execute(url);
 
-        //api that sends the data to the DB
-        String postUrl = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
-        UploadTask task1 = new UploadTask();
-
-        String status = null;
-        try {
-         status = task1.execute(postUrl).get();
-            if(status == null){
-                Log.i("Attempt:", "Failed");
-                System.out.println("Something went wrong!");
-            }
-            Log.i("Attempt:", "Data sent to the database");
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        Log.i("status", "success");
-
-        rates = findViewById(R.id.rate); // spinner to show the available converting rates
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        rates.setAdapter(adapter);
-        rates.setOnItemSelectedListener(this);
-
-        currencies = findViewById(R.id.currency); // spinner to show which currency to convert to
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.currency, android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        currencies.setAdapter(adapter2);
-        currencies.setOnItemSelectedListener(this);
-
-        actualRate = findViewById(R.id.actualRate); // shows the value of the converting rate
-        result = (TextView) findViewById(R.id.result);
-        btn = findViewById(R.id.convert);
-
-        btn.setOnClickListener(view -> { // lambda expression for converting and checking if something is missing
-            if (currencies.getSelectedItem().toString().equals("") || rates.getSelectedItem().toString().equals("")) {
-                Toast.makeText(getApplicationContext(), getString(R.string.koosa), Toast.LENGTH_SHORT).show();
-                result.setText(null);
-
-            } else if (currencies.getSelectedItem().toString().equals("LBP")) {
-                usdToLBP(view);
-            } else {
-                lbpToUSD(view);
-            }
-        });
-
-
-                    //koosa don't look here: اختراعات قواص الطائر
-       /* switch (currencies.getSelectedItem().toString()) {
-            case "USD":
-                switch (rates.getSelectedItem().toString()){
-                    case "Black Market High Rate":
-                        lbpToUSD(rates, blackMarketHigh);
-
-                    case "Black Market Low Rate":
-                        lbpToUSD(rates, blackMarketLow);
-
-                    case "Bank Rate":
-                        lbpToUSD(rates, bank);
-
-                    case "Official Rate":
-                        lbpToUSD(rates, official);
-                }
-                    :) was trying to implement the word by using switch case cause it is similar to When statements in Kotlin...
-            case "LBP":
-                switch (rates.getSelectedItem().toString()){
-                    case "Black Market High Rate":
-                        usdToLBP(rates, blackMarketHigh);
-
-                    case "Black Market Low Rate":
-                        usdToLBP(rates, blackMarketLow);
-
-                    case "Bank Rate":
-                        usdToLBP(rates, bank);
-
-                    case "Official Rate":
-                        usdToLBP(rates, official);
-                }*/
-
-
-    }
 
 
     private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
@@ -304,6 +148,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         startActivity(intent);
     }
 
+    public void goToCalculator(View view){
+        Intent obj = new Intent(getApplicationContext(), Calculator.class);
+        startActivity(obj);
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { //selects which rate we going to chose or convert with

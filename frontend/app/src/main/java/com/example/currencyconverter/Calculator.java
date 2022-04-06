@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,13 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Calculator extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     int bank , blackMarketHigh , blackMarketLow , official , money;
@@ -86,6 +95,119 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
     public void onNothingSelected(AdapterView<?> adapterView) { //koosa mitil illita
     }
 
+    class DownloadTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... urls){
+            String result = "";
+            URL url;
+            HttpURLConnection http;
+
+            try{
+                Log.i("Attempting", "Attempt2");
+                url = new URL(urls[0]);
+                http = (HttpURLConnection) url.openConnection();
+                InputStream in = http.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while( data != -1){
+                    char current = (char) data;
+                    result += current;
+                    data = reader.read();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                return null;
+            }
+
+            return result;
+        }
+        protected void onPostExecute(String s){
+            super.onPostExecute(s);
+            try{
+                JSONObject json = new JSONObject(s);
+                blackMarketHigh = json.getInt("Black Market rate-high");
+                blackMarketLow = json.getInt("Black Market rate-low");
+                bank = json.getInt("Bank rate");
+                official = json.getInt("Official rate");
+                Log.i("blackMarketHigh", ""+blackMarketHigh);
+                Log.i("blackMarketLow", ""+blackMarketLow);
+                Log.i("bank ", ""+bank );
+                Log.i("official", ""+official);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public class UploadTask extends AsyncTask<String, Void, String> {
+
+        URL url;
+        HttpURLConnection http;
+
+        public UploadTask(){
+            //set context variables if required
+        }
+
+        protected void onPostExecute(String s){
+            super.onPostExecute(s);
+            try{
+                JSONObject json = new JSONObject(s);
+                String status = json.getString("status");
+                Log.i("Connection status:", ""+status);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            StringBuilder status = new StringBuilder();
+
+            try {
+                url = new URL(strings[0]);
+                http = (HttpURLConnection) url.openConnection();
+                InputStream in = http.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while( data != -1){
+                    char current = (char) data;
+                    status.append(current);
+                    data = reader.read();
+                }
+
+                /* ORIGINALLY, we wanted to do a post request from the APP. We tried sending
+                the post attributes one by one and as a JSON file however the api never worked
+                It worked on postman, but not here. So, I decided to use a get request with attributes.
+                It is not the best way, yet it is guaranteed to work
+
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                String jsonInputString = "{\"amount\": 700, \"rate\": \"bank\", \"currency\": \"USD\"}";
+
+                byte[] out = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                int length = out.length;
+
+                urlConnection.setFixedLengthStreamingMode(length);
+                urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                urlConnection.connect();
+                try(OutputStream os = urlConnection.getOutputStream()) {
+                    os.write(out);
+                }
+                 */
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return status.toString();
+        }
+
+    }
+
 
     private void lbpToUSD(View view) {
 
@@ -120,14 +242,6 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
-
-        Intent current = getIntent();
-        blackMarketHigh = Integer.parseInt(current.getStringExtra("blackMarketHigh"));
-        blackMarketLow = Integer.parseInt(current.getStringExtra("blackMarketLow"));
-        bank = Integer.parseInt(current.getStringExtra("bank"));
-        official = Integer.parseInt(current.getStringExtra("official"));
-
-
 
         rates = findViewById(R.id.rate); // spinner to show the available converting rates
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
