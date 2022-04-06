@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     //creating global variables to use
     Intent intent;
+    //We scrapped a website to return all the 4 values.
+    // Our app will be converting on any of the values below
     int bank , blackMarketHigh , blackMarketLow , official , money;
     Spinner currencies;
     Spinner rates;
@@ -48,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     TextView result;
 
 
- //mahmoud thingies:--->
+ //This is the get request Object
+ //The DownloadTask object will allow us to retrieve the scraped values from the rates API
+
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -59,11 +63,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 Log.i("Attempting", "Attempt2");
                 url = new URL(urls[0]);
                 http = (HttpURLConnection) url.openConnection();
-
                 InputStream in = http.getInputStream();
                 InputStreamReader reader = new InputStreamReader(in);
                 int data = reader.read();
-
                 while( data != -1){
                     char current = (char) data;
                     result += current;
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
         protected void onPostExecute(String s){
             super.onPostExecute(s);
-
             try{
                 JSONObject json = new JSONObject(s);
                 blackMarketHigh = json.getInt("Black Market rate-high");
@@ -97,31 +98,48 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
     }
 
-    public class UploadTask extends AsyncTask<String, Void, Boolean> {
+    public class UploadTask extends AsyncTask<String, Void, String> {
 
         URL url;
         HttpURLConnection http;
-        HttpURLConnection con;
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
 
         public UploadTask(){
             //set context variables if required
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected void onPostExecute(String s){
+            super.onPostExecute(s);
+            try{
+                JSONObject json = new JSONObject(s);
+                String status = json.getString("status");
+                Log.i("Connection status:", ""+status);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
 
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected String doInBackground(String... strings) {
+            StringBuilder status = new StringBuilder();
 
             try {
-                URL url = new URL(strings[0]);
+                url = new URL(strings[0]);
+                http = (HttpURLConnection) url.openConnection();
+                InputStream in = http.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while( data != -1){
+                    char current = (char) data;
+                    status.append(current);
+                    data = reader.read();
+                }
+
+                /* ORIGINALLY, we wanted to do a post request from the APP. We tried sending
+                the post attributes one by one and as a JSON file however the api never worked
+                It worked on postman, but not here. So, I decided to use a get request with attributes.
+                It is not the best way, yet it is guaranteed to work
+
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setDoOutput(true);
@@ -136,39 +154,16 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
                 try(OutputStream os = urlConnection.getOutputStream()) {
                     os.write(out);
                 }
+                 */
 
-            }catch (Exception e){
+            }
+            catch (Exception e){
                 e.printStackTrace();
             }
 
-            return true;
+            return status.toString();
         }
-//        protected String doInBackground(String... params) {
-//            String urlString = params[0]; // URL to call
-//            String data = params[1]; //data to post
-//            Log.i("Data",data);
-//            OutputStream out = null;
-//
-//
-//            try {
-//
-//                URL url = new URL(urlString);
-//                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                con.setRequestMethod("POST");
-//                out = new BufferedOutputStream(con.getOutputStream());
-//
-//                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-//                writer.write(data);
-//                writer.flush();
-//                writer.close();
-//                out.close();
-//                con.connect();
-//                Log.i("status", "real success");
-//            } catch (Exception e) {
-//                System.out.println(e.getMessage());
-//            }
-//            return null;
-//        }
+
     }
 
     @Override
