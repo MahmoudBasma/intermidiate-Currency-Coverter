@@ -44,10 +44,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     int bank , blackMarketHigh , blackMarketLow , official , money;
     Spinner currencies;
     Spinner rates;
-    TextView actualRate;
-    TextView amount;
+    TextView actualRate, bankRate, officialRate;
     Button btn;
-    TextView result;
 
 
  //This is the get request Object
