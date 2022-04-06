@@ -3,6 +3,8 @@
 //This php API role is to scrape the website a retrieve 4 exchange rate values
 
 require_once "simple_html_dom.php";
+
+//This scraper uses the simple HTML DOM parser which basically search for innerHTML elements using tags, classes and ID
 $html = file_get_html("https://www.thelebaneseguide.com/lira-rate", false);
 
 $results = array();
