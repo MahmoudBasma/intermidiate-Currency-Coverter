@@ -1,4 +1,7 @@
 <?php
+
+//This php API role is to scrape the website a retrieve 4 exchange rate values
+
 require_once "simple_html_dom.php";
 $html = file_get_html("https://www.thelebaneseguide.com/lira-rate", false);
 
@@ -12,7 +15,7 @@ if (!empty($html)) {
 
         foreach ($div_class->find("h6") as $rate) {
             $rate_value = intval(substr($rate->plaintext, 0 ,1));
-
+            /
             if($rate_value == 1){
                 $value = substr($rate->plaintext, 55,13);
                 $results['Black Market rate-high'] = intval(substr($value, 0, 5));
