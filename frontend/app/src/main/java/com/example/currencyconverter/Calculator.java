@@ -81,7 +81,7 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
 
     }
 
-    private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
+    private void goToHelp() {
         String url = "https://www.thelebaneseguide.com/lira-rate";
         intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
@@ -166,6 +166,7 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
 
             return result;
         }
+        //Same as in the home page
         protected void onPostExecute(String s){
             super.onPostExecute(s);
             try{
@@ -270,6 +271,7 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
         money = Integer.parseInt(amount.getText().toString()) / Integer.parseInt(actualRate.getText().toString());
         TextView result = (TextView) findViewById(R.id.result);
         result.setText(money + " USD");
+        //Updating the url to make the requests
         task1.execute(url1 + "?amount="+amount+"&rate=market&currency=LBP");
 
     }
@@ -284,6 +286,7 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
             TextView result = (TextView) findViewById(R.id.result);
             result.setText(money + " LBP");
         }
+        //updating url to make the requests
         task1.execute(url1 + "?amount="+amount+"&rate=market&currency=USD");
 
     }

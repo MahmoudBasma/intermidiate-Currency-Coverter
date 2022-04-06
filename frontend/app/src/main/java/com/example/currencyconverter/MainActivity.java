@@ -57,11 +57,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Finding the text view to update them with the actual rates later on in the home page
         actualRate = (TextView) findViewById(R.id.blackMarket);
         bankRate = (TextView) findViewById(R.id.bankRate);
         officialRate = (TextView) findViewById(R.id.officialRate);
 
-        //api that fetches the data
+        //api that fetches the data and returns the 4 rates
 
         String url = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/rate_api.php";
         DownloadTask task = new DownloadTask();
@@ -74,9 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
             String result = "";
             URL url;
             HttpURLConnection http;
-
+            //Gets the JSON file from the api
             try{
-                Log.i("Attempting", "Attempt2");
                 url = new URL(urls[0]);
                 http = (HttpURLConnection) url.openConnection();
                 InputStream in = http.getInputStream();
@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
         protected void onPostExecute(String s){
             super.onPostExecute(s);
+            //This function takes the json object and fill the values in the pulic variables.
+            //It then logs them and update the text views of the home page
+
             try{
                 JSONObject json = new JSONObject(s);
                 blackMarketHigh = json.getInt("Black Market rate-high");
@@ -116,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
         }
     }
+
+    //THis is a menu options creater. It have 2 sections
+    //Section 1: info --> it will take you to the rates source page and article
+    //Section 2: history --> it will take you to a section where you can view the previous calculations
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { //creating the top menu to be used
@@ -139,7 +146,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         }
     }
 
-    private void goToHelp() { // redirects to the resource website, sorry couldn't use Lirarate.org, scrapping the data wasn't possible and fetching the original api was banned and didn't work most of the time
+    private void goToHelp() {
+        // redirects to the resource website, sorry couldn't use Lirarate.org,
+        // scrapping the data wasn't possible and fetching the original api was banned
+        // and didn't work most of the time
+        //The Lebanese guide website contains more exchange rates
+
         String url = "https://www.thelebaneseguide.com/lira-rate";
         intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
@@ -152,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }
 
     public void goToCalculator(View view){
+        //Redirect you to the calculator section where you can convert money on 4 rates
         Intent obj = new Intent(getApplicationContext(), Calculator.class);
         startActivity(obj);
     }
