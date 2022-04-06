@@ -33,6 +33,11 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
         startActivity(intent);
     }
 
+    public void goToHome(View view){
+        Intent obj = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(obj);
+    }
+
     private void showHistory() { // redirects us to our history of converting
         intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
@@ -123,7 +128,7 @@ public class Calculator extends AppCompatActivity implements AdapterView.OnItemS
         official = Integer.parseInt(current.getStringExtra("official"));
 
 
-        
+
         rates = findViewById(R.id.rate); // spinner to show the available converting rates
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rates, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
