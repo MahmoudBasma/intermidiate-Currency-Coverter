@@ -53,6 +53,15 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
  //This is the get request Object
  //The DownloadTask object will allow us to retrieve the scraped values from the rates API
 
+    public void goToCalculator(View view){
+        Intent obj = new Intent(getApplicationContext(), Calculator.class);
+        obj.putExtra("bank", bank);
+        obj.putExtra("blackMarketHigh",blackMarketHigh);
+        obj.putExtra("blackMarketLow",blackMarketLow);
+        obj.putExtra("official",official);
+        startActivity(obj);
+
+    }
     class DownloadTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... urls){
             String result = "";
@@ -204,18 +213,18 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
         String postUrl = "http://10.21.147.46/intermidiate%20Currency%20Coverter/backend/APIs/db_api.php";
         UploadTask task1 = new UploadTask();
 
-        boolean requestResult = true;
+        String status = null;
         try {
-         requestResult = task1.execute(postUrl).get();
-            if(!requestResult){
+         status = task1.execute(postUrl).get();
+            if(status == null){
                 Log.i("Attempt:", "Failed");
                 System.out.println("Something went wrong!");
             }
-            Log.i("Attempt:", "Post Request sent");
+            Log.i("Attempt:", "Data sent to the database");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         Log.i("status", "success");
 
         rates = findViewById(R.id.rate); // spinner to show the available converting rates
